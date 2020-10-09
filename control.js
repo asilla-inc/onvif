@@ -1,42 +1,40 @@
-/**
- * Created by Andrew D.Laptev<a.d.laptev@gmail.com> on 1/21/15.
- */
-
-/* カメラの接続情報 */ 
-var CAMERA_HOST = '192.168.0.155',
-	USERNAME = 'admin',
-	PASSWORD = 'otw200128',
-	PORT = 80;
-
-var http = require('http'),
-	Cam = require('./lib/onvif').Cam;
+var Cam = require('./lib/onvif').Cam;
+const util = require('util');
+const yaml = require('js-yaml');
+const fs = require('fs');
 const { linerase } = require('./lib/utils');
-const util = require('util')
+const config =  yaml.safeLoad(fs.readFileSync('./config/config.yaml'), 'utf-8');
+// console.log(config)
 
 new Cam({
-	hostname: CAMERA_HOST,
-	username: USERNAME,
-	password: PASSWORD,
-	port: PORT
+	hostname: config.camera.IP,
+	username: config.camera.USERNAME,
+	password: config.camera.PASSWORD,
+	port: config.camera.PORT
 }, function(err) {
 	if (err) {
-		console.log('Connection Failed for ' + CAMERA_HOST + ' Port: ' + PORT + ' Username: ' + USERNAME + ' Password: ' + PASSWORD);
+		console.log('Connection Failed for ' + config.camera.IP + ' Port: ' + config.camera.PORT + ' Username: ' + config.camera.USERNAME + ' Password: ' + config.camera.PASSWORD);
 		return;
-	}
+	} else {
 	console.log('CONNECTED');
+	};
+	let jsondata = JSON.stringify(this)
+	fs.writeFileSync('camera_data.json', jsondata)
+	var newProfile = this.profiles[0].videoEncoderConfiguration
+	newProfile.resolution = {
+		width: config.profiles[config.currentProfile].width,
+		height: config.profiles[config.currentProfile].height
+	}
+	newProfile.rateControl.bitrateLimit = config.profiles[config.currentProfile].bitrateLimit
 
-	// this.absoluteMove({
-	// 	x: 1,
-	// 	y: 5,
-	// 	zoom: 0.1
-	// });
-	console.log(util.inspect(this, {showHidden: false, depth: null}))
-	// var newProfile = this.profiles[0].videoEncoderConfiguration
-	// newProfile.resolution = {width:1280,height:720}
-	// newProfile.rateControl.bitrateLimit = 788
-	// console.log(util.inspect(newProfile, {showHidden: false, depth: null}))
+	// var options = util.inspect(newProfile, {showHidden: false, depth: null})
 
-	// this.setVideoEncoderConfiguration(newProfile, function(_, data, xml) {
-	// 	console.log(data, xml)
-	// })
+	this.setVideoEncoderConfiguration(newProfile, function(err, data, xml) {
+		if (err) {
+			console.log("SetVideoEncoder faileddddd");
+			console.log(err);
+			return;
+		}
+		console.log(data, xml)
+	})
 });

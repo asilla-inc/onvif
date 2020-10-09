@@ -1,0 +1,17 @@
+camera:
+  IP: 192.168.1.221
+  USERNAME: admin
+  PASSWORD: mprooffice1234567
+  PORT: 80
+
+profiles:
+  HD:
+    width: 1280
+    height: 720
+    bitrateLimit: 1536
+  FullHD:
+    width: 1920
+    height: 1080
+    bitrateLimit: 4196
+
+currentProfile: FullHD
