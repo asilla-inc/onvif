@@ -18,23 +18,29 @@ new Cam({
 	} else {
 	console.log('CONNECTED');
 	};
+	console.log(this)
 	let jsondata = JSON.stringify(this)
 	fs.writeFileSync('camera_data.json', jsondata)
 	var newProfile = this.profiles[0].videoEncoderConfiguration
-	newProfile.resolution = {
-		width: config.profiles[config.currentProfile].width,
-		height: config.profiles[config.currentProfile].height
-	}
-	newProfile.rateControl.bitrateLimit = config.profiles[config.currentProfile].bitrateLimit
+	// newProfile.resolution = {
+	// 	width: config.profiles[config.currentProfile].width,
+	// 	height: config.profiles[config.currentProfile].height
+	// }
+	// newProfile.rateControl.bitrateLimit = config.profiles[config.currentProfile].bitrateLimit
 
 	// var options = util.inspect(newProfile, {showHidden: false, depth: null})
 
-	this.setVideoEncoderConfiguration(newProfile, function(err, data, xml) {
-		if (err) {
-			console.log("SetVideoEncoder faileddddd");
-			console.log(err);
-			return;
-		}
-		console.log(data, xml)
+	// this.setVideoEncoderConfiguration(newProfile, function(err, data, xml) {
+	// 	if (err) {
+	// 		console.log("SetVideoEncoder faileddddd");
+	// 		console.log(err);
+	// 		return;
+	// 	}
+	// 	console.log(data, xml)
+	// })
+	this.relativeMove({
+		x: 0.9,
+		y: 0.6,
+		zoom: 0.5
 	})
 });

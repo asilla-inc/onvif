@@ -1,8 +1,8 @@
 camera:
-  IP: 192.168.1.221
-  USERNAME: admin
-  PASSWORD: mprooffice1234567
-  PORT: 80
+  IP: localhost
+  USERNAME: root_nesic
+  PASSWORD: Nesic123_
+  PORT: 11100
 
 profiles:
   HD:
